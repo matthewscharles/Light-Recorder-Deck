@@ -125,7 +125,9 @@ void draw() {
     for(int i = 0; i < 3; i++) {
       sliders[i].update();
       sliders[i].display();
-      cBuffer[i] = constrain(int(sliders[i].getPos()), 0, 255);
+      
+      cBuffer[i] = int(map(int(sliders[i].getPos()), 38, 302, 0, 255));
+      //println(cBuffer[0]);
       // println("slider " + i + " " + sliders[i].getPos());
     }
     
@@ -137,7 +139,7 @@ void draw() {
         //println(sliderArray[0]);
       }
       oscP5.send(sliderMsg, puredata);
-      println(sliderMsg);
+      //println(sliderMsg);
   }
     
     {//Send the OSC message from sliders
