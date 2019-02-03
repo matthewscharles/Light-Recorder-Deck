@@ -156,7 +156,8 @@ class HScrollbar {
 
 
   void display() {
-   stroke(3);
+   stroke(0);
+   strokeWeight(3);
    fill(bgcolor);
    rect(xpos, ypos, swidth, sheight);
    if (over || locked) {
