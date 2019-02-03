@@ -13,16 +13,8 @@
   
 
 // Buttons
-  int rectX, rectY;      // Position of square button
-  int circleX, circleY;  // Position of circle button
-  int rectSize = 90;     // Diameter of rect
-  int circleSize = 93;   // Diameter of circle
-  color rectColor, circleColor, baseColor;
-  color rectHighlight, circleHighlight;
-  color currentColor;
-  boolean rectOver = false;
-  boolean circleOver = false;
-  int pressedColour;
+  RoundButton saver;
+ 
 
   int[] dimensions = {800, 600};
 
@@ -57,27 +49,18 @@ void setup() {
   
   
 
-  {//Initialise buttons
-    rectColor = color(0);
-    rectHighlight = color(51);
-    circleColor = color(255);
-    circleHighlight = color(204);
-    baseColor = color(102);
-    currentColor = baseColor;
-    circleX = width/2+circleSize/2+10;
-    circleY = sliderOffset[1] + 64 * 2 + 32;//height/2;
-    rectX = width/2-rectSize-10;
-    rectY = height/2-rectSize/2;
-    ellipseMode(CENTER);
-  }
+ 
 
   //set up screen
     size(800, 600); //Size of my current RPi screen
     sliderOffset[1] = height / 3;
     // noStroke();
-    
+  {//Initialise buttons
+    saver = new RoundButton();
+  }
 
   {//Initialise sliders
+    
     //HScrollbar[] sliders = {hs1, hs2, hs3};
     for (int i = 0; i < 3; i++) {
       sliders[i] = new HScrollbar(sliderOffset[0], sliderOffset[1] + (64 * i), width/3, 40, 2);
@@ -117,7 +100,8 @@ void draw() {
 
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
-    updateMouse(mouseX, mouseY);
+    saver.drawButton();
+    saver.updateMouse(mouseX, mouseY);
     // background(currentColor);
 
     //if (rectOver) {
@@ -127,29 +111,12 @@ void draw() {
     //}
     //stroke(255);
     //rect(rectX, rectY, rectSize, rectSize);
-    {//Light label - make this part of a button class/method
-      fill(0);
-      textSize(32);
-      textAlign(CENTER);
-      text("Light on", circleX, circleY - circleSize);
-    }
-    
-    fill(150, 0, 150);
-    ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
-
-    //if (circleOver) {
-    //  fill((buttonFlag[0] ? 255 : 0));
-    //} else {
-    //  fill((buttonFlag[0] ? 255 : 0));
-    //}
-    fill(pressedColour);
-    ellipse(circleX, circleY, circleSize, circleSize);
-    if (pressedColour > 0) pressedColour -= 5;
   }
  
   {//Draw and update sliders
     //Slider label - level with light on label?
     {
+      fill(0);
       stroke(0);
       textSize(32);
       textAlign(LEFT);
@@ -215,7 +182,82 @@ boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurp
 }
 
 void mousePressed() {
-  if (circleOver) {
+  saver.click();
+
+}
+
+
+
+
+class RoundButton {
+  int rectX, rectY;      // Position of square button
+  int circleX, circleY;  // Position of circle button
+  int rectSize = 90;     // Diameter of rect
+  int circleSize = 93;   // Diameter of circle
+  color rectColor, circleColor, baseColor;
+  color rectHighlight, circleHighlight;
+  color currentColor;
+  boolean rectOver = false;
+  boolean circleOver = false;
+  int pressedColour = 0;
+  
+  RoundButton () {
+    rectColor = color(0);
+    rectHighlight = color(51);
+    circleColor = color(255);
+    circleHighlight = color(204);
+    baseColor = color(102);
+    currentColor = baseColor;
+    circleX = width/2+circleSize/2+10;
+    circleY = sliderOffset[1] + 64 * 2 + 32;//height/2;
+    rectX = width/2-rectSize-10;
+    rectY = height/2-rectSize/2;
+    ellipseMode(CENTER);
+  }
+  
+   void drawButton(){//int pressedColour
+    {//Light label - make this part of a button class/method
+      fill(0);
+      textSize(32);
+      textAlign(CENTER);
+      text("Light on", circleX, circleY - circleSize);
+    }
+    
+    fill(150, 0, 150);
+    ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
+
+    //if (circleOver) {
+    //  fill((buttonFlag[0] ? 255 : 0));
+    //} else {
+    //  fill((buttonFlag[0] ? 255 : 0));
+    //}
+    fill(pressedColour);
+    ellipse(circleX, circleY, circleSize, circleSize);
+    if (pressedColour > 0) pressedColour -= 5;
+  }
+  
+  void updateMouse(int x, int y){//from Buttons
+  if ( overCircle(circleX, circleY, circleSize) ) {
+    circleOver = true;
+    rectOver = false;
+  } else if ( overRect(rectX, rectY, rectSize, rectSize) ) {
+    //rectOver = true;
+    //circleOver = false;
+  } else {
+    circleOver = rectOver = false;
+  }
+}
+  boolean overRect(int x, int y, int width, int height)  {
+  if (mouseX >= x && mouseX <= x+width &&
+      mouseY >= y && mouseY <= y+height) {
+    return true;
+  } else {
+    return false;
+  }
+  }
+  
+  void click(){
+    if (circleOver) {
     currentColor = circleColor;
     buttonFlag[0] = !buttonFlag[0];
     pressedColour = 255;
@@ -223,16 +265,8 @@ void mousePressed() {
   if (rectOver) {
     currentColor = rectColor;
   }
-}
-
-boolean overRect(int x, int y, int width, int height)  {
-  if (mouseX >= x && mouseX <= x+width &&
-      mouseY >= y && mouseY <= y+height) {
-    return true;
-  } else {
-    return false;
   }
-}
+
 
 boolean overCircle(int x, int y, int diameter) {
   float disX = x - mouseX;
@@ -244,16 +278,6 @@ boolean overCircle(int x, int y, int diameter) {
   }
 }
 
-void updateMouse(int x, int y){//from Buttons
-  if ( overCircle(circleX, circleY, circleSize) ) {
-    circleOver = true;
-    rectOver = false;
-  } else if ( overRect(rectX, rectY, rectSize, rectSize) ) {
-    //rectOver = true;
-    //circleOver = false;
-  } else {
-    circleOver = rectOver = false;
-  }
 }
 
 class HScrollbar {
