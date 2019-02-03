@@ -1,6 +1,7 @@
 //Light Recorder Deck for Raspberry Pi.
 //Charles Matthews 2019
 //GUI for OSC communication with Pure Data
+//Run this in presentation mode
 
 //Slider code based on example from the Processing Scrollbar example
 //CC-BY-NC
