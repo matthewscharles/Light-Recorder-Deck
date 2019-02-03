@@ -158,12 +158,12 @@ class HScrollbar {
   void display() {
    stroke(0);
    strokeWeight(3);
-   fill(bgcolor);
+   fill(bgcolor, 100);
    rect(xpos, ypos, swidth, sheight);
    if (over || locked) {
      fill(0, 0, 0, 100);
    } else {
-     fill(102, 102, 102, 100);
+     fill(bgcolor, 200);
    }
    ellipse(spos+sheight/2, ypos+sheight/2, sheight * 1.5, sheight * 1.5);
  }
