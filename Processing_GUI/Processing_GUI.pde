@@ -8,6 +8,10 @@
 //CC-BY-NC
 //https://creativecommons.org/licenses/by-nc/4.0/
 
+//JSON for settings
+  JSONObject json;
+  
+
 // Buttons
   int rectX, rectY;      // Position of square button
   int circleX, circleY;  // Position of circle button
@@ -18,6 +22,7 @@
   color currentColor;
   boolean rectOver = false;
   boolean circleOver = false;
+  int pressedColour;
 
   int[] dimensions = {800, 600};
 
@@ -27,7 +32,7 @@
 
   int[] sliderOffset = {32, 100};
 // Faders
-  HScrollbar hs1, hs2, hs3;
+  HScrollbar hs1, hs2, hs3; //can I take these out?
   HScrollbar[] sliders = {hs1, hs2, hs3};
 
   int[] cBuffer = {0, 0, 0};
@@ -49,6 +54,8 @@ void setup() {
     oscP5 = new OscP5(this, 12000);
     puredata = new NetAddress("127.0.0.1", 8000);
   }
+  
+  
 
   {//Initialise buttons
     rectColor = color(0);
@@ -84,6 +91,18 @@ void setup() {
     sliders[1].setColor(color(0, 255, 0));
     sliders[2].setColor(color(0, 0, 255));
   }
+  
+  {//Initialise JSON
+    //json = new JSONObject();
+    json = loadJSONObject("data/new.json");
+    JSONArray jRGB = json.getJSONArray("rgb");
+    int[] myValues = jRGB.getIntArray();
+    for (int i = 0; i<3; i++){
+       cBuffer[i] = myValues[i];//is this redundant? just set straight to slider?
+       sliders[i].setPos(cBuffer[i]);
+       println("value " + i + " " + cBuffer[i]);
+    } 
+  }
   // sliders[3].setColor(color(255, 255, 255)); //re-introduce white later
 
   // Load images
@@ -108,26 +127,34 @@ void draw() {
     //}
     //stroke(255);
     //rect(rectX, rectY, rectSize, rectSize);
-
-    textSize(32);
-    textAlign(CENTER);
-    text("Light on", circleX, circleY - circleSize);
+    {//Light label - make this part of a button class/method
+      fill(0);
+      textSize(32);
+      textAlign(CENTER);
+      text("Light on", circleX, circleY - circleSize);
+    }
+    
     fill(150, 0, 150);
     ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
 
-    if (circleOver) {
-      fill((buttonFlag[0] ? 255 : 0));
-    } else {
-      fill((buttonFlag[0] ? 255 : 0));
-    }
-    stroke(0);
+    //if (circleOver) {
+    //  fill((buttonFlag[0] ? 255 : 0));
+    //} else {
+    //  fill((buttonFlag[0] ? 255 : 0));
+    //}
+    fill(pressedColour);
     ellipse(circleX, circleY, circleSize, circleSize);
+    if (pressedColour > 0) pressedColour -= 5;
   }
  
   {//Draw and update sliders
-    textSize(32);
-    textAlign(LEFT);
-    text("RGB", sliderOffset[0], sliderOffset[1] - 32);
+    //Slider label - level with light on label?
+    {
+      stroke(0);
+      textSize(32);
+      textAlign(LEFT);
+      text("RGB", sliderOffset[0], sliderOffset[1] - 40);
+    }
     for(int i = 0; i < 3; i++) {
       sliders[i].update();
       sliders[i].display();
@@ -153,12 +180,25 @@ void draw() {
       if (buttonFlag[0] != buttonFlag[1]){
         oscP5.send(new OscMessage("/onoff").add(buttonFlag[0] ? 1 : 0), puredata);
         buttonFlag[1] = buttonFlag[0];
+        if (buttonFlag[0]) saveArray();
         //println("got it: " + (buttonFlag[0] ? 1 : 0));
       }
 
 
     }
   }
+}
+
+
+void saveArray(){
+  JSONArray rgb = new JSONArray();
+    for(int i = 0; i < 3; i++) {
+      rgb.setInt(i, cBuffer[i]);
+      
+    }
+    json.setJSONArray("rgb", rgb);
+    saveJSONObject(json, "data/new.json");
+    println("--------------saved--------------");
 }
 
 boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurpose abstraction?
@@ -178,6 +218,7 @@ void mousePressed() {
   if (circleOver) {
     currentColor = circleColor;
     buttonFlag[0] = !buttonFlag[0];
+    pressedColour = 255;
   }
   if (rectOver) {
     currentColor = rectColor;
@@ -219,7 +260,7 @@ class HScrollbar {
   int swidth, sheight;    // width and height of bar
   float xpos, ypos;       // x and y position of bar
   float spos, newspos;    // x position of slider
-  float sposMin, sposMax; // max and min values of slider
+  float sposMin, sposMax; // max and min values of slider --set these!
   int loose;              // how loose/heavy
   boolean over;           // is the mouse over the slider?
   boolean locked;
@@ -239,7 +280,13 @@ class HScrollbar {
     sposMax = xpos + swidth - sheight;
     loose = l;
   }
-
+  
+  void setPos(int pos) {
+    float mapped = map(pos, 0, 255, 38, 302); //need to set this range!! 
+    spos = mapped;
+    newspos = mapped;
+  }
+  
   void update() { //added x y from buttons
 
 
