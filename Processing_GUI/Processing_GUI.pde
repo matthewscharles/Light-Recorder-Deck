@@ -7,36 +7,75 @@
 //CC-BY-NC
 //https://creativecommons.org/licenses/by-nc/4.0/
 
-HScrollbar hs1, hs2, hs3;  // Two scrollbars
+// Buttons 
+  int rectX, rectY;      // Position of square button
+  int circleX, circleY;  // Position of circle button
+  int rectSize = 90;     // Diameter of rect
+  int circleSize = 93;   // Diameter of circle
+  color rectColor, circleColor, baseColor;
+  color rectHighlight, circleHighlight;
+  color currentColor;
+  boolean rectOver = false;
+  boolean circleOver = false;
 
-int[] cBuffer = {0, 0, 0};
-PImage img1, img2;  // Two images to load
+  boolean[] buttonFlag = {false, false};
 
-import oscP5.*;
-import netP5.*;
+  boolean showCursor = true;
+  
 
-OscP5 oscP5;
+// Faders
+  HScrollbar hs1, hs2, hs3;
 
-NetAddress puredata;
+  int[] cBuffer = {0, 0, 0};
+  PImage img1, img2;  // Two images to load
+  int[] sliderArray = {0, 0, 0};
 
+
+// Set up OscP5
+  import oscP5.*;
+  import netP5.*;
+
+  OscP5 oscP5;
+
+  NetAddress puredata;
 
 void setup() {
+
+  {//Initialise OscP5
     oscP5 = new OscP5(this, 12000);
-  puredata = new NetAddress("127.0.0.1", 8000);
+    puredata = new NetAddress("127.0.0.1", 8000);
+  }
 
-  size(800, 600);
-  noStroke();
+  {//Initialise buttons
+    rectColor = color(0);
+    rectHighlight = color(51);
+    circleColor = color(255);
+    circleHighlight = color(204);
+    baseColor = color(102);
+    currentColor = baseColor;
+    circleX = width/2+circleSize/2+10;
+    circleY = height/2;
+    rectX = width/2-rectSize-10;
+    rectY = height/2-rectSize/2;
+    ellipseMode(CENTER);
+  }
 
+  //set up screen
+    size(800, 600); //Size of my current RPi screen
+    // noStroke();
+  
 
+  {//Initialise sliders
+    hs1 = new HScrollbar(32, height/3-32, width/3, 40, 2);
+    hs2 = new HScrollbar(32, height/3+32, width/3, 40, 2);
+    hs3 = new HScrollbar(32, height/3+96, width/3, 40, 2);
+    HScrollbar[] sliders = {hs1, hs2, hs3};
 
-  hs1 = new HScrollbar(32, height/3-32, width/3, 40, 2);
-  hs2 = new HScrollbar(32, height/3+32, width/3, 40, 2);
-  hs3 = new HScrollbar(32, height/3+96, width/3, 40, 2);
-  HScrollbar[] sliders = {hs1, hs2, hs3};
-
-  sliders[0].setColor(color(255, 0, 0));
-  sliders[1].setColor(color(0, 255, 0));
-  sliders[2].setColor(color(0, 0, 255));
+    sliders[0].setColor(color(255, 0, 0));
+    sliders[1].setColor(color(0, 255, 0));
+    sliders[2].setColor(color(0, 0, 255));
+  }
+  // sliders[3].setColor(color(255, 255, 255)); //re-introduce white later
 
   // Load images
   //img1 = loadImage("seedTop.jpg");
@@ -45,48 +84,130 @@ void setup() {
 
 void draw() {
   //background(180, 0, 100);
-  noCursor(); //this shouldn't work in presentation mode, but seems to be fine!
+  if (!showCursor) noCursor(); //this shouldn't work in presentation mode, but seems to be fine!
   HScrollbar[] sliders = {hs1, hs2, hs3}; //how to define this globally?
 
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
+  {//Draw buttons
+    updateMouse(mouseX, mouseY);
+    background(currentColor);
 
+    if (rectOver) {
+      fill(rectHighlight);
+    } else {
+      fill(rectColor);
+    }
+    stroke(255);
+    rect(rectX, rectY, rectSize, rectSize);
 
-/*
-  // Get the position of the img1 scrollbar
-  // and convert to a value to display the img1 image
-  //float img1Pos = hs1.getPos()-width/2;
-  //fill(255);
-  //image(img1, width/2-img1.width/2 + img1Pos*1.5, 0);
+    if (circleOver) {
+      fill((buttonFlag[0] ? 255 : 0));
+    } else {
+      fill((buttonFlag[0] ? 255 : 0));
+    }
+    stroke(0);
+    ellipse(circleX, circleY, circleSize, circleSize);
+  }
+  /*
+    // Get the position of the img1 scrollbar
+    // and convert to a value to display the img1 image
+    //float img1Pos = hs1.getPos()-width/2;
+    //fill(255);
+    //image(img1, width/2-img1.width/2 + img1Pos*1.5, 0);
 
-  // Get the position of the img2 scrollbar
-  // and convert to a value to display the img2 image
-  */
-  //float img2Pos = hs2.getPos()-width/2;
-  //fill(255);
-  //image(img2, width/2-img2.width/2 + img2Pos*1.5, height/2);
-
-for(int i = 0; i < 3; i++) {
-  sliders[i].update();
-  sliders[i].display();
-  cBuffer[i] = constrain(int(sliders[i].getPos()), 0, 255);
-  // println("slider " + i + " " + sliders[i].getPos());
+    // Get the position of the img2 scrollbar
+    // and convert to a value to display the img2 image
+    */
+    //float img2Pos = hs2.getPos()-width/2;
+    //fill(255);
+    //image(img2, width/2-img2.width/2 + img2Pos*1.5, height/2);
+  {//Draw and update sliders
+    for(int i = 0; i < 3; i++) {
+      sliders[i].update();
+      sliders[i].display();
+      cBuffer[i] = constrain(int(sliders[i].getPos()), 0, 255);
+      // println("slider " + i + " " + sliders[i].getPos());
+    }
+    
+    if (testArray(cBuffer[0], cBuffer[1], cBuffer[2])) {
+      OscMessage sliderMsg = new OscMessage("/rgb");
+      for (int i = 0; i < 3; i++) {
+        sliderMsg.add((cBuffer[i]));
+        sliderArray[i] = cBuffer[i];
+        //println(sliderArray[0]);
+      }
+      oscP5.send(sliderMsg, puredata);
+      println(sliderMsg);
+  }
+    
+    {//Send the OSC message from sliders
+      
+      if (buttonFlag[0] != buttonFlag[1]){
+        oscP5.send(new OscMessage("/onoff").add(buttonFlag[0] ? 1 : 0), puredata);
+        buttonFlag[1] = buttonFlag[0];
+        println("got it: " + (buttonFlag[0] ? 1 : 0));
+      }
+      
+      
+    }
+  }
 }
-  oscP5.send(new OscMessage("/rgb").add((cBuffer[0])).add(cBuffer[1]).add(cBuffer[2]), puredata);
 
-
-  // hs1.update();
-  // hs2.update();
-  // hs3.update();
-  // hs1.display();
-  // hs2.display();
-  // hs3.display();
-
-
-  // stroke(0);
-  // line(0, height/2, width, height/2);
-
+boolean testArray(int r, int g, int b){
+  int[] myArray = {r, g, b};
+  boolean value = false;
+  for (int i = 0; i < 3; i++){
+    if (myArray[i] != sliderArray[i]) {
+      value = true;
+    }
+  }
+  
+  
+  
+  return value;
+  
 }
 
+void mousePressed() {
+  if (circleOver) {
+    currentColor = circleColor;
+    buttonFlag[0] = !buttonFlag[0];
+  }
+  if (rectOver) {
+    currentColor = rectColor;
+  }
+}
+
+boolean overRect(int x, int y, int width, int height)  {
+  if (mouseX >= x && mouseX <= x+width &&
+      mouseY >= y && mouseY <= y+height) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+boolean overCircle(int x, int y, int diameter) {
+  float disX = x - mouseX;
+  float disY = y - mouseY;
+  if (sqrt(sq(disX) + sq(disY)) < diameter/2 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void updateMouse(int x, int y){//from Buttons
+  if ( overCircle(circleX, circleY, circleSize) ) {
+    circleOver = true;
+    rectOver = false;
+  } else if ( overRect(rectX, rectY, rectSize, rectSize) ) {
+    rectOver = true;
+    circleOver = false;
+  } else {
+    circleOver = rectOver = false;
+  }
+}
 
 class HScrollbar {
   int swidth, sheight;    // width and height of bar
@@ -113,7 +234,9 @@ class HScrollbar {
     loose = l;
   }
 
-  void update() {
+  void update() { //added x y from buttons
+
+
     if (overEvent()) {
       over = true;
     } else {
