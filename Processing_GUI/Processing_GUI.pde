@@ -4,6 +4,7 @@
 //Run this in presentation mode
 
 //Slider code based on example from the Processing Scrollbar example
+//Buttons modified from the Processing Button example
 //CC-BY-NC
 //https://creativecommons.org/licenses/by-nc/4.0/
 
@@ -18,13 +19,16 @@
   boolean rectOver = false;
   boolean circleOver = false;
 
+  int[] dimensions = {800, 600};
+
   boolean[] buttonFlag = {false, false};
 
   boolean showCursor = false;
 
-
+  int[] sliderOffset = {32, 100};
 // Faders
   HScrollbar hs1, hs2, hs3;
+  HScrollbar[] sliders = {hs1, hs2, hs3};
 
   int[] cBuffer = {0, 0, 0};
   PImage img1, img2;  // Two images to load
@@ -54,7 +58,7 @@ void setup() {
     baseColor = color(102);
     currentColor = baseColor;
     circleX = width/2+circleSize/2+10;
-    circleY = height/2;
+    circleY = sliderOffset[1] + 64 * 2 + 32;//height/2;
     rectX = width/2-rectSize-10;
     rectY = height/2-rectSize/2;
     ellipseMode(CENTER);
@@ -62,14 +66,19 @@ void setup() {
 
   //set up screen
     size(800, 600); //Size of my current RPi screen
+    sliderOffset[1] = height / 3;
     // noStroke();
-
+    
 
   {//Initialise sliders
-    hs1 = new HScrollbar(32, height/3-32, width/3, 40, 2);
-    hs2 = new HScrollbar(32, height/3+32, width/3, 40, 2);
-    hs3 = new HScrollbar(32, height/3+96, width/3, 40, 2);
-    HScrollbar[] sliders = {hs1, hs2, hs3};
+    //HScrollbar[] sliders = {hs1, hs2, hs3};
+    for (int i = 0; i < 3; i++) {
+      sliders[i] = new HScrollbar(sliderOffset[0], sliderOffset[1] + (64 * i), width/3, 40, 2);
+    }
+    //hs1 = new HScrollbar(sliderOffset[0], sliderOffset[1], width/3, 40, 2);
+    //hs2 = new HScrollbar(sliderOffset, height/3+32, width/3, 40, 2);
+    //hs3 = new HScrollbar(sliderOffset, height/3+96, width/3, 40, 2);
+    //HScrollbar[] sliders = {hs1, hs2, hs3};
 
     sliders[0].setColor(color(255, 0, 0));
     sliders[1].setColor(color(0, 255, 0));
@@ -85,20 +94,26 @@ void setup() {
 void draw() {
   //background(180, 0, 100);
   if (!showCursor) noCursor(); //this shouldn't work in presentation mode, but seems to be fine!
-  HScrollbar[] sliders = {hs1, hs2, hs3}; //how to define this globally?
+  //HScrollbar[] sliders = {hs1, hs2, hs3}; //how to define this globally?
 
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
     updateMouse(mouseX, mouseY);
     // background(currentColor);
 
-    if (rectOver) {
-      fill(rectHighlight);
-    } else {
-      fill(rectColor);
-    }
-    stroke(255);
-    rect(rectX, rectY, rectSize, rectSize);
+    //if (rectOver) {
+    //  fill(rectHighlight);
+    //} else {
+    //  fill(rectColor);
+    //}
+    //stroke(255);
+    //rect(rectX, rectY, rectSize, rectSize);
+
+    textSize(32);
+    textAlign(CENTER);
+    text("Light on", circleX, circleY - circleSize);
+    fill(150, 0, 150);
+    ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
 
     if (circleOver) {
       fill((buttonFlag[0] ? 255 : 0));
@@ -108,20 +123,11 @@ void draw() {
     stroke(0);
     ellipse(circleX, circleY, circleSize, circleSize);
   }
-  /*
-    // Get the position of the img1 scrollbar
-    // and convert to a value to display the img1 image
-    //float img1Pos = hs1.getPos()-width/2;
-    //fill(255);
-    //image(img1, width/2-img1.width/2 + img1Pos*1.5, 0);
-
-    // Get the position of the img2 scrollbar
-    // and convert to a value to display the img2 image
-    */
-    //float img2Pos = hs2.getPos()-width/2;
-    //fill(255);
-    //image(img2, width/2-img2.width/2 + img2Pos*1.5, height/2);
+ 
   {//Draw and update sliders
+    textSize(32);
+    textAlign(LEFT);
+    text("RGB", sliderOffset[0], sliderOffset[1] - 32);
     for(int i = 0; i < 3; i++) {
       sliders[i].update();
       sliders[i].display();
@@ -131,12 +137,12 @@ void draw() {
       // println("slider " + i + " " + sliders[i].getPos());
     }
 
-    if (testArray(cBuffer[0], cBuffer[1], cBuffer[2])) {
+    if (testArray(cBuffer, sliderArray)) {
       OscMessage sliderMsg = new OscMessage("/rgb");
       for (int i = 0; i < 3; i++) {
         sliderMsg.add((cBuffer[i]));
         sliderArray[i] = cBuffer[i];
-        //println(sliderArray[0]);
+        println(sliderArray[0]);
       }
       oscP5.send(sliderMsg, puredata);
       //println(sliderMsg);
@@ -147,7 +153,7 @@ void draw() {
       if (buttonFlag[0] != buttonFlag[1]){
         oscP5.send(new OscMessage("/onoff").add(buttonFlag[0] ? 1 : 0), puredata);
         buttonFlag[1] = buttonFlag[0];
-        println("got it: " + (buttonFlag[0] ? 1 : 0));
+        //println("got it: " + (buttonFlag[0] ? 1 : 0));
       }
 
 
@@ -155,16 +161,14 @@ void draw() {
   }
 }
 
-boolean testArray(int r, int g, int b){
-  int[] myArray = {r, g, b};
+boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurpose abstraction?
+ 
   boolean value = false;
-  for (int i = 0; i < 3; i++){
-    if (myArray[i] != sliderArray[i]) {
+  for (int i = 0; i < myTestArray.length; i++){
+    if (myTestArray[i] != targetArray[i]) {
       value = true;
     }
   }
-
-
 
   return value;
 
@@ -204,8 +208,8 @@ void updateMouse(int x, int y){//from Buttons
     circleOver = true;
     rectOver = false;
   } else if ( overRect(rectX, rectY, rectSize, rectSize) ) {
-    rectOver = true;
-    circleOver = false;
+    //rectOver = true;
+    //circleOver = false;
   } else {
     circleOver = rectOver = false;
   }
