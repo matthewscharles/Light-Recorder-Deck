@@ -29,10 +29,9 @@ void setup() {
 
 
 
-  hs1 = new HScrollbar(0, height/3-32, width/2, 40, 2);
-
-  hs2 = new HScrollbar(0, height/3+32, width/2, 40, 2);
-  hs3 = new HScrollbar(0, height/3+96, width/2, 40, 2);
+  hs1 = new HScrollbar(32, height/3-32, width/3, 40, 2);
+  hs2 = new HScrollbar(32, height/3+32, width/3, 40, 2);
+  hs3 = new HScrollbar(32, height/3+96, width/3, 40, 2);
   HScrollbar[] sliders = {hs1, hs2, hs3};
 
   sliders[0].setColor(color(255, 0, 0));
@@ -160,11 +159,11 @@ class HScrollbar {
    strokeWeight(3);
    fill(bgcolor, 100);
    rect(xpos, ypos, swidth, sheight);
-   if (over || locked) {
-     fill(0, 0, 0, 100);
-   } else {
-     fill(bgcolor, 200);
-   }
+   // if (over || locked) {
+   //   fill(0, 0, 0, 100);
+   // } else {
+     fill(bgcolor, 255);
+   // }
    ellipse(spos+sheight/2, ypos+sheight/2, sheight * 1.5, sheight * 1.5);
  }
 
