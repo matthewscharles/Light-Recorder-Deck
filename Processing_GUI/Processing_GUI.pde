@@ -7,7 +7,7 @@
 //CC-BY-NC
 //https://creativecommons.org/licenses/by-nc/4.0/
 
-// Buttons 
+// Buttons
   int rectX, rectY;      // Position of square button
   int circleX, circleY;  // Position of circle button
   int rectSize = 90;     // Diameter of rect
@@ -20,8 +20,8 @@
 
   boolean[] buttonFlag = {false, false};
 
-  boolean showCursor = true;
-  
+  boolean showCursor = false;
+
 
 // Faders
   HScrollbar hs1, hs2, hs3;
@@ -63,7 +63,7 @@ void setup() {
   //set up screen
     size(800, 600); //Size of my current RPi screen
     // noStroke();
-  
+
 
   {//Initialise sliders
     hs1 = new HScrollbar(32, height/3-32, width/3, 40, 2);
@@ -90,7 +90,7 @@ void draw() {
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
     updateMouse(mouseX, mouseY);
-    background(currentColor);
+    // background(currentColor);
 
     if (rectOver) {
       fill(rectHighlight);
@@ -125,12 +125,12 @@ void draw() {
     for(int i = 0; i < 3; i++) {
       sliders[i].update();
       sliders[i].display();
-      
+
       cBuffer[i] = int(map(int(sliders[i].getPos()), 38, 302, 0, 255));
       //println(cBuffer[0]);
       // println("slider " + i + " " + sliders[i].getPos());
     }
-    
+
     if (testArray(cBuffer[0], cBuffer[1], cBuffer[2])) {
       OscMessage sliderMsg = new OscMessage("/rgb");
       for (int i = 0; i < 3; i++) {
@@ -141,16 +141,16 @@ void draw() {
       oscP5.send(sliderMsg, puredata);
       //println(sliderMsg);
   }
-    
+
     {//Send the OSC message from sliders
-      
+
       if (buttonFlag[0] != buttonFlag[1]){
         oscP5.send(new OscMessage("/onoff").add(buttonFlag[0] ? 1 : 0), puredata);
         buttonFlag[1] = buttonFlag[0];
         println("got it: " + (buttonFlag[0] ? 1 : 0));
       }
-      
-      
+
+
     }
   }
 }
@@ -163,11 +163,11 @@ boolean testArray(int r, int g, int b){
       value = true;
     }
   }
-  
-  
-  
+
+
+
   return value;
-  
+
 }
 
 void mousePressed() {
