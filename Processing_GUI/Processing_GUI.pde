@@ -16,7 +16,7 @@
   RoundButton saver, enable, test, connect;
  
 
-  int[] dimensions = {750, 550};
+  int[] dimensions = {700, 500};
 
   //boolean[] buttonFlag = {false, false};
 
@@ -213,7 +213,7 @@ void mousePressed() {
    oscP5.send(new OscMessage("/audio").add(enable.checkFlag() ? 1 : 0), puredata);
    println("toggle" + (enable.checkFlag() ? 1 : 0));
   }
-  if (connect.updateMouse(mouseX, mouseY)){
+  if (test.updateMouse(mouseX, mouseY)){
    test.toggle();
    oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
   }
