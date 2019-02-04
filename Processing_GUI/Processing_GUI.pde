@@ -16,7 +16,7 @@
   RoundButton saver, enable, test, connect;
  
 
-  int[] dimensions = {800, 600};
+  int[] dimensions = {750, 550};
 
   //boolean[] buttonFlag = {false, false};
 
