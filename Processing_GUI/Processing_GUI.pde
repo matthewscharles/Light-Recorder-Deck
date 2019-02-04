@@ -56,9 +56,9 @@ void setup() {
     sliderOffset[1] = height / 3;
     // noStroke();
   {//Initialise buttons
-    saver = new RoundButton("button", width/2, "Save");//work out a ratio for x position, add y
-    enable = new RoundButton("toggle", width/2 + 120, "Audio");
-    connect = new RoundButton("button", width/2 + 240, "Connect");
+    saver = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 1), "Save");//work out a ratio for x position, add y
+    enable = new RoundButton("toggle", int(width/3 * 2.5), int(height /4.5 * 2), "Audio");
+    connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 3), "Connect");
   }
 
   {//Initialise sliders
@@ -123,9 +123,9 @@ void draw() {
       stroke(0);
       textSize(24);
       textAlign(LEFT);
-      text("Light Recorder Deck", sliderOffset[0], height/12);
+      text("Light Recorder Deck", sliderOffset[0], 64);
       textSize(20);
-      text("Charles Matthews 2019", sliderOffset[0], height - height/12);
+      text("Charles Matthews 2019", sliderOffset[0], height - 64);
     }
  
  
@@ -229,7 +229,7 @@ class RoundButton {
   boolean[] buttonFlag = {false, false};
   String type, label;
   
-  RoundButton (String setType, int setCircleX, String setLabel) {
+  RoundButton (String setType, int setCircleX, int setCircleY, String setLabel) {
     rectColor = color(0);
     rectHighlight = color(51);
     circleColor = color(255);
@@ -237,7 +237,7 @@ class RoundButton {
     baseColor = color(102);
     currentColor = baseColor;
     circleX = setCircleX; //circleX = width/2+circleSize/2+10;
-    circleY = sliderOffset[1] + 64 * 2 + 32;//height/2;
+    circleY = setCircleY; //sliderOffset[1] + 64 * 2 + 32;//height/2;
     rectX = width/2-rectSize-10;
     rectY = height/2-rectSize/2;
     type = setType;
