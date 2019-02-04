@@ -13,7 +13,7 @@
   
 
 // Buttons
-  RoundButton saver, enable, connect;
+  RoundButton saver, enable, test, connect;
  
 
   int[] dimensions = {800, 600};
@@ -58,7 +58,8 @@ void setup() {
   {//Initialise buttons
     saver = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 1), "Save");//work out a ratio for x position, add y
     enable = new RoundButton("toggle", int(width/3 * 2.5), int(height /4.5 * 2), "Audio");
-    connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 3), "Connect");
+    test = new RoundButton("toggle", int(width/3 * 2.5), int(height / 4.5 * 3), "Test");
+    connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 4), "Connect");
   }
 
   {//Initialise sliders
@@ -102,10 +103,16 @@ void draw() {
 
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
+  
+    fill(100, 0, 100, 100);
+    rect(width/6 * 4.5, height / 9 * 1, width/6 * 1, (height / 7) * 6);
+    noFill();
     saver.drawButton();
     //saver.updateMouse(mouseX, mouseY);
     enable.drawButton();
+    enable.setToggle(true);
     connect.drawButton();
+    test.drawButton();
     //enable.updateMouse(mouseX, mouseY);
     // background(currentColor);
 
@@ -123,7 +130,7 @@ void draw() {
       stroke(0);
       textSize(24);
       textAlign(LEFT);
-      text("Light Recorder Deck", sliderOffset[0], 64);
+      text("Light Recorder Deck", sliderOffset[0], 80);
       textSize(20);
       text("Charles Matthews 2019", sliderOffset[0], height - 64);
     }
@@ -203,13 +210,18 @@ void mousePressed() {
   }
   if (enable.updateMouse(mouseX, mouseY)){
    enable.toggle();
-   oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
+   oscP5.send(new OscMessage("/audio").add(enable.checkFlag() ? 1 : 0), puredata);
    println("toggle" + (enable.checkFlag() ? 1 : 0));
+  }
+  if (connect.updateMouse(mouseX, mouseY)){
+   test.toggle();
+   oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
   }
   if (connect.updateMouse(mouseX, mouseY)){
    connect.click();
    oscP5.send(new OscMessage("/connect").add(1), puredata);
   }
+   
 }
 
 
@@ -248,7 +260,7 @@ class RoundButton {
    void drawButton(){//int pressedColour
     {//Light label - make this part of a button class/method
       fill(0);
-      textSize(32);
+      textSize(20);
       textAlign(CENTER);
       text(label, circleX, circleY - circleSize);
     }
@@ -313,10 +325,14 @@ class RoundButton {
     return buttonFlag[0] != buttonFlag[1];
   }
   
-  boolean toggle(){ //this doesn't currently make sense
+  boolean toggle(){ //I don't think I need this array for now
     buttonFlag[0] = !buttonFlag[0];
     buttonFlag[1] = buttonFlag[0];
     return buttonFlag[0]; //return buttonFlag[0] != buttonFlag[1];
+  }
+  
+  void setToggle(boolean input){
+    buttonFlag[0] = input;
   }
 
 
