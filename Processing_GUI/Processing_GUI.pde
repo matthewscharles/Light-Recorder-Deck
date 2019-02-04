@@ -14,11 +14,12 @@
 
 // Buttons
   RoundButton saver;
+  RoundButton enable;
  
 
   int[] dimensions = {800, 600};
 
-  boolean[] buttonFlag = {false, false};
+  //boolean[] buttonFlag = {false, false};
 
   boolean showCursor = false;
 
@@ -56,7 +57,8 @@ void setup() {
     sliderOffset[1] = height / 3;
     // noStroke();
   {//Initialise buttons
-    saver = new RoundButton();
+    saver = new RoundButton("button", width/2, "Save");
+    enable = new RoundButton("toggle", width/2 + 120, "Audio");
   }
 
   {//Initialise sliders
@@ -101,7 +103,9 @@ void draw() {
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
     saver.drawButton();
-    saver.updateMouse(mouseX, mouseY);
+    //saver.updateMouse(mouseX, mouseY);
+    enable.drawButton();
+    //enable.updateMouse(mouseX, mouseY);
     // background(currentColor);
 
     //if (rectOver) {
@@ -112,6 +116,17 @@ void draw() {
     //stroke(255);
     //rect(rectX, rectY, rectSize, rectSize);
   }
+ 
+   {//title text
+      fill(0);
+      stroke(0);
+      textSize(24);
+      textAlign(LEFT);
+      text("Light Recorder Deck", sliderOffset[0], 32);
+      textSize(20);
+      text("Charles Matthews 2019", sliderOffset[0], height - 32);
+    }
+ 
  
   {//Draw and update sliders
     //Slider label - level with light on label?
@@ -143,11 +158,10 @@ void draw() {
   }
 
     {//Send the OSC message from sliders
-
-      if (buttonFlag[0] != buttonFlag[1]){
-        oscP5.send(new OscMessage("/onoff").add(buttonFlag[0] ? 1 : 0), puredata);
-        buttonFlag[1] = buttonFlag[0];
-        if (buttonFlag[0]) saveArray();
+      if (saver.updateMouse(mouseX, mouseY)){
+        oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
+        
+        
         //println("got it: " + (buttonFlag[0] ? 1 : 0));
       }
 
@@ -182,8 +196,14 @@ boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurp
 }
 
 void mousePressed() {
-  saver.click();
-
+  if (saver.updateMouse(mouseX, mouseY)){
+    saver.click();
+    saveArray();
+  }
+  if (enable.updateMouse(mouseX, mouseY)){
+   enable.toggle();
+   println("toggle");
+  }
 }
 
 
@@ -200,18 +220,22 @@ class RoundButton {
   boolean rectOver = false;
   boolean circleOver = false;
   int pressedColour = 0;
+  boolean[] buttonFlag = {false, false};
+  String type, label;
   
-  RoundButton () {
+  RoundButton (String setType, int setCircleX, String setLabel) {
     rectColor = color(0);
     rectHighlight = color(51);
     circleColor = color(255);
     circleHighlight = color(204);
     baseColor = color(102);
     currentColor = baseColor;
-    circleX = width/2+circleSize/2+10;
+    circleX = setCircleX; //circleX = width/2+circleSize/2+10;
     circleY = sliderOffset[1] + 64 * 2 + 32;//height/2;
     rectX = width/2-rectSize-10;
     rectY = height/2-rectSize/2;
+    type = setType;
+    label = setLabel;
     ellipseMode(CENTER);
   }
   
@@ -220,7 +244,7 @@ class RoundButton {
       fill(0);
       textSize(32);
       textAlign(CENTER);
-      text("Light on", circleX, circleY - circleSize);
+      text(label, circleX, circleY - circleSize);
     }
     
     fill(150, 0, 150);
@@ -229,22 +253,30 @@ class RoundButton {
     //if (circleOver) {
     //  fill((buttonFlag[0] ? 255 : 0));
     //} else {
-    //  fill((buttonFlag[0] ? 255 : 0));
-    //}
-    fill(pressedColour);
+    
+    switch (type){
+      case "toggle" : fill((buttonFlag[0] ? 255 : 0));
+      break;
+      case "button" : fill(pressedColour);
+      break;
+    }
+    
     ellipse(circleX, circleY, circleSize, circleSize);
     if (pressedColour > 0) pressedColour -= 5;
   }
   
-  void updateMouse(int x, int y){//from Buttons
+  boolean updateMouse(int x, int y){//from Buttons
   if ( overCircle(circleX, circleY, circleSize) ) {
     circleOver = true;
-    rectOver = false;
+    return true;
+    //rectOver = false;
   } else if ( overRect(rectX, rectY, rectSize, rectSize) ) {
     //rectOver = true;
     //circleOver = false;
+    return false;
   } else {
     circleOver = rectOver = false;
+    return false;
   }
 }
   boolean overRect(int x, int y, int width, int height)  {
@@ -259,12 +291,26 @@ class RoundButton {
   void click(){
     if (circleOver) {
     currentColor = circleColor;
-    buttonFlag[0] = !buttonFlag[0];
+    //buttonFlag[0] = !buttonFlag[0];
     pressedColour = 255;
   }
-  if (rectOver) {
-    currentColor = rectColor;
+  //if (rectOver) {
+  //  currentColor = rectColor;
+  //}
   }
+  
+  boolean checkFlag(){
+    return buttonFlag[0];
+  }
+  
+  boolean checkChanged(){
+    return buttonFlag[0] != buttonFlag[1];
+  }
+  
+  boolean toggle(){ //this doesn't currently make sense
+    buttonFlag[0] = !buttonFlag[0];
+    buttonFlag[1] = buttonFlag[0];
+    return buttonFlag[0]; //return buttonFlag[0] != buttonFlag[1];
   }
 
 
