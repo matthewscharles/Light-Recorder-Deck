@@ -215,7 +215,7 @@ void mousePressed() {
   }
   if (test.updateMouse(mouseX, mouseY)){
    test.toggle();
-   oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
+   oscP5.send(new OscMessage("/onoff").add(test.checkFlag() ? 1 : 0), puredata);
   }
   if (connect.updateMouse(mouseX, mouseY)){
    connect.click();
