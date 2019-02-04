@@ -56,9 +56,9 @@ void setup() {
     sliderOffset[1] = height / 3;
     // noStroke();
   {//Initialise buttons
-    saver = new RoundButton("button", width/2, "Save");
+    saver = new RoundButton("button", width/2, "Save");//work out a ratio for x position, add y
     enable = new RoundButton("toggle", width/2 + 120, "Audio");
-    connect = new RoundButton("button", width/2 + 270, "Connect");
+    connect = new RoundButton("button", width/2 + 240, "Connect");
   }
 
   {//Initialise sliders
@@ -123,9 +123,9 @@ void draw() {
       stroke(0);
       textSize(24);
       textAlign(LEFT);
-      text("Light Recorder Deck", sliderOffset[0], 64);
+      text("Light Recorder Deck", sliderOffset[0], height/12);
       textSize(20);
-      text("Charles Matthews 2019", sliderOffset[0], height - 64);
+      text("Charles Matthews 2019", sliderOffset[0], height - height/12);
     }
  
  
@@ -204,7 +204,7 @@ void mousePressed() {
   if (enable.updateMouse(mouseX, mouseY)){
    enable.toggle();
    oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
-   //println("toggle");
+   println("toggle" + (enable.checkFlag() ? 1 : 0));
   }
   if (connect.updateMouse(mouseX, mouseY)){
    connect.click();
@@ -218,8 +218,8 @@ void mousePressed() {
 class RoundButton {
   int rectX, rectY;      // Position of square button
   int circleX, circleY;  // Position of circle button
-  int rectSize = 90;     // Diameter of rect
-  int circleSize = 93;   // Diameter of circle
+  int rectSize = 90;     // Diameter of rect  -- not needed atm!
+  int circleSize = 45;   // Diameter of circle
   color rectColor, circleColor, baseColor;
   color rectHighlight, circleHighlight;
   color currentColor;
