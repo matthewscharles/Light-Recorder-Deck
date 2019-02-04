@@ -61,7 +61,7 @@ void setup() {
     test = new RoundButton("toggle", int(width/3 * 2.5), int(height / 4.5 * 3), "Test");
     connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 4), "Connect");
   }
-
+    enable.setToggle(true);
   {//Initialise sliders
     
     //HScrollbar[] sliders = {hs1, hs2, hs3};
@@ -110,7 +110,7 @@ void draw() {
     saver.drawButton();
     //saver.updateMouse(mouseX, mouseY);
     enable.drawButton();
-    enable.setToggle(true);
+    
     connect.drawButton();
     test.drawButton();
     //enable.updateMouse(mouseX, mouseY);
