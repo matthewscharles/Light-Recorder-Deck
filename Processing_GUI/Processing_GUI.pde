@@ -13,8 +13,7 @@
   
 
 // Buttons
-  RoundButton saver;
-  RoundButton enable;
+  RoundButton saver, enable, connect;
  
 
   int[] dimensions = {800, 600};
@@ -59,6 +58,7 @@ void setup() {
   {//Initialise buttons
     saver = new RoundButton("button", width/2, "Save");
     enable = new RoundButton("toggle", width/2 + 120, "Audio");
+    connect = new RoundButton("button", width/2 + 270, "Connect");
   }
 
   {//Initialise sliders
@@ -105,6 +105,7 @@ void draw() {
     saver.drawButton();
     //saver.updateMouse(mouseX, mouseY);
     enable.drawButton();
+    connect.drawButton();
     //enable.updateMouse(mouseX, mouseY);
     // background(currentColor);
 
@@ -122,9 +123,9 @@ void draw() {
       stroke(0);
       textSize(24);
       textAlign(LEFT);
-      text("Light Recorder Deck", sliderOffset[0], 32);
+      text("Light Recorder Deck", sliderOffset[0], 64);
       textSize(20);
-      text("Charles Matthews 2019", sliderOffset[0], height - 32);
+      text("Charles Matthews 2019", sliderOffset[0], height - 64);
     }
  
  
@@ -202,7 +203,12 @@ void mousePressed() {
   }
   if (enable.updateMouse(mouseX, mouseY)){
    enable.toggle();
-   println("toggle");
+   oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
+   //println("toggle");
+  }
+  if (connect.updateMouse(mouseX, mouseY)){
+   connect.click();
+   oscP5.send(new OscMessage("/connect").add(1), puredata);
   }
 }
 
