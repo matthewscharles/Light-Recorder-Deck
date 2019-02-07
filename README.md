@@ -4,7 +4,8 @@ This is an audio responsive lighting system developed in Pure Data and Processin
 
 The framework was originally developed for the Augmented Gamelan project, and this new open source version is being created in collaboration with Joanne Cox for her Engage and Interact project funded by [Help Musicians UK](https://www.helpmusicians.org.uk/). 
 
-<img src=https://github.com/matthewscharles/Light-Recorder-Deck/blob/master/documentation/images/home-photo.JPG alt="A photo of the first prototype: a small touchscreen attached to a Raspberry Pi, with a screen showing coloured sliders: red, green, and blue" width=252  height=189 align="right">
+<img src=https://github.com/matthewscharles/Light-Recorder-Deck/blob/master/documentation/images/home-photo.JPG alt="A photo of the first prototype: a small touchscreen attached to a Raspberry Pi, with a screen showing coloured sliders: red, green, and blue" width=252  height=189 align="center">
+
 This is being designed with improved access in mind: although I will make no claim to this being “accessible” in a generic sense, in the longer term, it might provide an opportunity to explore different interfaces: touch screens, switch control, voice response and screen reading -- and maybe others that haven't been invented yet. 
 
 While there are plenty of DMX systems out there already, including some excellent free and open source projects for the Raspberry Pi, I’m interested in making this accessible using a set of tools used by digital artists and instrument builders. 
