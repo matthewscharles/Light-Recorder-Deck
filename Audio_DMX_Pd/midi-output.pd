@@ -1,8 +1,11 @@
-#N canvas 0 23 733 434 10;
+#N canvas 624 662 589 584 10;
 #X obj 166 183 midiformat, f 41;
 #X obj 166 213 midiout;
 #X floatatom 409 154 5 0 0 0 - - -;
 #X obj 166 145 pack;
+#X text 758 111 MIDI output abstractions;
+#X msg 52 145 0 \$1;
 #X connect 0 0 1 0;
 #X connect 2 0 0 6;
 #X connect 3 0 0 0;
+#X connect 5 0 0 0;
