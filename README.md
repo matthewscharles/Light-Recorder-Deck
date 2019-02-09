@@ -15,3 +15,6 @@ In particular, by running the audio in Pure Data, I hope we can find an interest
 As time goes on, I will upload a shopping list and some more detailed instructions on how to set this up on a Raspberry Pi. For now, I am using this repository for daily development to ensure that the code is open and public, but it remains undocumented!
 
 Please note: while I make this stuff a lot, I don't really identify as a coder, and GitHub remains fairly new and impenetrable to me...so any feedback or advice on how to make this work would be most appreciated!!
+
+# How does it work?
+No programming is required (or at least, that's the eventual idea). The programs are loaded to an SD card to boot directly on the Raspberry Pi. Having chosen your lights and their channels, the various colours and intensities can be chosen and linked to sounds through a set of sliders on the touch screen.
