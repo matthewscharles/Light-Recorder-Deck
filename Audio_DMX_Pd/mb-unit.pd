@@ -23,8 +23,8 @@
 #X floatatom 242 198 5 0 0 0 - - -;
 #X obj 323 71 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 296 221 speedlim 200;
 #X obj 307 250 send lightOut;
+#X obj 296 221 cyclone/speedlim 200;
 #X connect 0 0 19 0;
 #X connect 2 0 3 0;
 #X connect 3 0 13 0;
@@ -46,6 +46,6 @@
 #X connect 18 0 21 0;
 #X connect 19 0 18 1;
 #X connect 20 0 18 0;
-#X connect 21 0 23 0;
+#X connect 21 0 24 0;
 #X connect 22 0 0 0;
-#X connect 23 0 24 0;
+#X connect 24 0 23 0;
