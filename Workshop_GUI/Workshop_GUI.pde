@@ -2,8 +2,9 @@
 //Engage and Interact / Defiant Journey version for Joanne Cox
 //Charles Matthews 2019
 //GUI for OSC communication with Pure Data
-//Run this in presentation mode
+//Run this in presentation mode and make showCursor false for touch screen
 
+//I wrote this as an initial Processing experiment. There are lots of lazy/wrong things within..
 //Slider code based on example from the Processing Scrollbar example
 //Buttons modified from the Processing Button example
 //CC-BY-NC
@@ -13,18 +14,19 @@ boolean showCursor = true;
 
 //JSON for settings
   JSONObject json;
-  
+
 
 // Buttons
   RoundButton saver, enable, test, connect;
   RoundButton off, colour, sun, back, bugs, sophie;
- 
+  RoundButton[] allButtons = {off, colour, sun, back, bugs, sophie};
+
 
   int[] dimensions = {700, 500};
 
   //boolean[] buttonFlag = {false, false};
 
-  
+
 
   int[] sliderOffset = {32, 100};
 // Faders
@@ -50,31 +52,33 @@ void setup() {
     oscP5 = new OscP5(this, 12000);
     puredata = new NetAddress("127.0.0.1", 8000);
   }
-  
-  
 
- 
+
+
+
 
   //set up screen
     size(800, 600); //Size of my current RPi screen
     sliderOffset[1] = height / 3;
     // noStroke();
   {//Initialise buttons
-    saver = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 1), "Save");//work out a ratio for x position, add y   
+    saver = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 1), "Save");//work out a ratio for x position, add y
     enable = new RoundButton("toggle", int(width/3 * 2.5), int(height /4.5 * 2), "Audio");
     test = new RoundButton("toggle", int(width/3 * 2.5), int(height / 4.5 * 3), "Test");
     connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 4), "Connect");
-    
-    colour = new RoundButton("button", int(width/3 * 2), int(height / 4.5 * 1), "Colours");//work out a ratio for x position, add y
+    off = new RoundButton("button", int(width/3 * 2), int(height / 4.5 * 1), "Off");//work out a ratio for x position, add y
+    colour = new RoundButton("button", int(width/3 * 2), int(height / 4.5 * 2), "Colours");//work out a ratio for x position, add y
     sun = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 1), "Sun");//work out a ratio for x position, add y
     back = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 2), "I'm Back");//work out a ratio for x position, add y
     bugs = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 3), "Bed Bugs");//work out a ratio for x position, add y
     sophie = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 4), "Sophie's Song");//work out a ratio for x position, add y
-    
+
+
+
   }
     enable.setToggle(true);
   {//Initialise sliders
-    
+
     //HScrollbar[] sliders = {hs1, hs2, hs3};
     for (int i = 0; i < 3; i++) {
       sliders[i] = new HScrollbar(sliderOffset[0], sliderOffset[1] + (64 * i), width/3, 40, 2);
@@ -88,7 +92,7 @@ void setup() {
     sliders[1].setColor(color(0, 255, 0));
     sliders[2].setColor(color(0, 0, 255));
   }
-  
+
   {//Initialise JSON
     //json = new JSONObject();
     json = loadJSONObject("data/new.json");
@@ -98,7 +102,7 @@ void setup() {
        cBuffer[i] = myValues[i];//is this redundant? just set straight to slider?
        sliders[i].setPos(cBuffer[i]);
        println("value " + i + " " + cBuffer[i]);
-    } 
+    }
   }
   // sliders[3].setColor(color(255, 255, 255)); //re-introduce white later
 
@@ -114,22 +118,23 @@ void draw() {
 
   background(color(sliders[0].getPos(), sliders[1].getPos(), sliders[2].getPos()));
   {//Draw buttons
-  
+
     fill(100, 0, 100, 100);
     rect(width/6 * 4.5, height / 9 * 1, width/6 * 1, (height / 7) * 6);
     noFill();
-    
+
     //looks like I wrote this just as I was starting to get into processing, this is clunky!
     sun.drawButton();
     back.drawButton();
     colour.drawButton();
+    off.drawButton();
     bugs.drawButton();
     sophie.drawButton();
-    
+
     saver.drawButton();
     //saver.updateMouse(mouseX, mouseY);
     enable.drawButton();
-    
+
     connect.drawButton();
     test.drawButton();
     //enable.updateMouse(mouseX, mouseY);
@@ -143,7 +148,7 @@ void draw() {
     //stroke(255);
     //rect(rectX, rectY, rectSize, rectSize);
   }
- 
+
    {//title text
       fill(0);
       stroke(0);
@@ -153,8 +158,8 @@ void draw() {
       textSize(20);
       text("Charles Matthews 2019", sliderOffset[0], height - 64);
     }
- 
- 
+
+
   {//Draw and update sliders
     //Slider label - level with light on label?
     {
@@ -187,8 +192,8 @@ void draw() {
     {//Send the OSC message from sliders
       if (saver.updateMouse(mouseX, mouseY)){
         oscP5.send(new OscMessage("/onoff").add(enable.checkFlag() ? 1 : 0), puredata);
-        
-        
+
+
         //println("got it: " + (buttonFlag[0] ? 1 : 0));
       }
 
@@ -202,7 +207,7 @@ void saveArray(){
   JSONArray rgb = new JSONArray();
     for(int i = 0; i < 3; i++) {
       rgb.setInt(i, cBuffer[i]);
-      
+
     }
     json.setJSONArray("rgb", rgb);
     saveJSONObject(json, "data/new.json");
@@ -210,7 +215,7 @@ void saveArray(){
 }
 
 boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurpose abstraction?
- 
+
   boolean value = false;
   for (int i = 0; i < myTestArray.length; i++){
     if (myTestArray[i] != targetArray[i]) {
@@ -222,11 +227,30 @@ boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurp
 
 }
 
+void setScene(int scene) {
+   oscP5.send(new OscMessage("/scene").add(scene), puredata);
+}
+
 void mousePressed() {
   //this could be an array/for loop
-  if (sun.updateMouse(mouseX, mouseY)) {
-     oscP5.send(new OscMessage("/scene").add(1), puredata);
-  }
+  //for (int i = 0; i < 6; i++) {
+  //  if (allButtons[i].updateMouse(mouseX, mouseY)) {
+  //    setScene(i);
+  //  }
+  //}
+   if (sun.updateMouse(mouseX, mouseY)) {
+      setScene(2);
+   } else if (back.updateMouse(mouseX, mouseY)) {
+     setScene(3);
+   } else if (bugs.updateMouse(mouseX, mouseY)) {
+     setScene(4);
+   } else if (sophie.updateMouse(mouseX, mouseY)) {
+     setScene(5);
+   } else if (colour.updateMouse(mouseX, mouseY)) {
+     setScene(1);
+   } else if (off.updateMouse(mouseX, mouseY)) {
+     setScene(0);
+   }
   if (saver.updateMouse(mouseX, mouseY)){
     saver.click();
     saveArray();
@@ -244,7 +268,7 @@ void mousePressed() {
    connect.click();
    oscP5.send(new OscMessage("/connect").add(1), puredata);
   }
-   
+
 }
 
 
@@ -263,7 +287,7 @@ class RoundButton {
   int pressedColour = 0;
   boolean[] buttonFlag = {false, false};
   String type, label;
-  
+
   RoundButton (String setType, int setCircleX, int setCircleY, String setLabel) {
     rectColor = color(0);
     rectHighlight = color(51);
@@ -279,7 +303,7 @@ class RoundButton {
     label = setLabel;
     ellipseMode(CENTER);
   }
-  
+
    void drawButton(){//int pressedColour
     {//Light label - make this part of a button class/method
       fill(0);
@@ -287,25 +311,25 @@ class RoundButton {
       textAlign(CENTER);
       text(label, circleX, circleY - circleSize);
     }
-    
+
     fill(150, 0, 150);
     ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
 
     //if (circleOver) {
     //  fill((buttonFlag[0] ? 255 : 0));
     //} else {
-    
+
     switch (type){
       case "toggle" : fill((buttonFlag[0] ? 255 : 0));
       break;
       case "button" : fill(pressedColour);
       break;
     }
-    
+
     ellipse(circleX, circleY, circleSize, circleSize);
     if (pressedColour > 0) pressedColour -= 5;
   }
-  
+
   boolean updateMouse(int x, int y){//from Buttons
   if ( overCircle(circleX, circleY, circleSize) ) {
     circleOver = true;
@@ -328,7 +352,7 @@ class RoundButton {
     return false;
   }
   }
-  
+
   void click(){
     if (circleOver) {
     currentColor = circleColor;
@@ -339,21 +363,21 @@ class RoundButton {
   //  currentColor = rectColor;
   //}
   }
-  
+
   boolean checkFlag(){
     return buttonFlag[0];
   }
-  
+
   boolean checkChanged(){
     return buttonFlag[0] != buttonFlag[1];
   }
-  
+
   boolean toggle(){ //I don't think I need this array for now
     buttonFlag[0] = !buttonFlag[0];
     buttonFlag[1] = buttonFlag[0];
     return buttonFlag[0]; //return buttonFlag[0] != buttonFlag[1];
   }
-  
+
   void setToggle(boolean input){
     buttonFlag[0] = input;
   }
@@ -395,13 +419,13 @@ class HScrollbar {
     sposMax = xpos + swidth - sheight;
     loose = l;
   }
-  
+
   void setPos(int pos) {
-    float mapped = map(pos, 0, 255, 38, 302); //need to set this range!! 
+    float mapped = map(pos, 0, 255, 38, 302); //need to set this range!!
     spos = mapped;
     newspos = mapped;
   }
-  
+
   void update() { //added x y from buttons
 
 
