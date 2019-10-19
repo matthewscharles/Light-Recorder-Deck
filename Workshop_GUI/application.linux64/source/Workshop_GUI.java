@@ -1,3 +1,22 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import oscP5.*; 
+import netP5.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class Workshop_GUI extends PApplet {
+
 //Light Recorder Deck for Raspberry Pi
 //Engage and Interact / Defiant Journey version for Joanne Cox
 //Charles Matthews 2019
@@ -39,14 +58,14 @@ boolean showCursor = false;
 
 
 // Set up OscP5
-  import oscP5.*;
-  import netP5.*;
+  
+  
 
   OscP5 oscP5;
 
   NetAddress puredata;
 
-void setup() {
+public void setup() {
 
   {//Initialise OscP5
     oscP5 = new OscP5(this, 12000);
@@ -58,20 +77,20 @@ void setup() {
 
 
   //set up screen
-    size(800, 600); //Size of my current RPi screen
+     //Size of my current RPi screen
     sliderOffset[1] = height / 3;
     // noStroke();
   {//Initialise buttons
-    saver = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 1), "Save");//work out a ratio for x position, add y
-    enable = new RoundButton("toggle", int(width/3 * 2.5), int(height /4.5 * 2), "Audio");
-    test = new RoundButton("toggle", int(width/3 * 2.5), int(height / 4.5 * 3), "Test");
-    connect = new RoundButton("button", int(width/3 * 2.5), int(height / 4.5 * 4), "Connect");
-    off = new RoundButton("button", int(width/3 * 2), int(height / 4.5 * 1), "Off");//work out a ratio for x position, add y
-    colour = new RoundButton("button", int(width/3 * 2), int(height / 4.5 * 2), "Colours");//work out a ratio for x position, add y
-    sun = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 1), "Sun");//work out a ratio for x position, add y
-    back = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 2), "I'm Back");//work out a ratio for x position, add y
-    bugs = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 3), "Bed Bugs");//work out a ratio for x position, add y
-    sophie = new RoundButton("button", int(width/3 * 1.5), int(height / 4.5 * 4), "Sophie's Song");//work out a ratio for x position, add y
+    saver = new RoundButton("button", PApplet.parseInt(width/3 * 2.5f), PApplet.parseInt(height / 4.5f * 1), "Save");//work out a ratio for x position, add y
+    enable = new RoundButton("toggle", PApplet.parseInt(width/3 * 2.5f), PApplet.parseInt(height /4.5f * 2), "Audio");
+    test = new RoundButton("toggle", PApplet.parseInt(width/3 * 2.5f), PApplet.parseInt(height / 4.5f * 3), "Test");
+    connect = new RoundButton("button", PApplet.parseInt(width/3 * 2.5f), PApplet.parseInt(height / 4.5f * 4), "Connect");
+    off = new RoundButton("button", PApplet.parseInt(width/3 * 2), PApplet.parseInt(height / 4.5f * 1), "Off");//work out a ratio for x position, add y
+    colour = new RoundButton("button", PApplet.parseInt(width/3 * 2), PApplet.parseInt(height / 4.5f * 2), "Colours");//work out a ratio for x position, add y
+    sun = new RoundButton("button", PApplet.parseInt(width/3 * 1.5f), PApplet.parseInt(height / 4.5f * 1), "Sun");//work out a ratio for x position, add y
+    back = new RoundButton("button", PApplet.parseInt(width/3 * 1.5f), PApplet.parseInt(height / 4.5f * 2), "I'm Back");//work out a ratio for x position, add y
+    bugs = new RoundButton("button", PApplet.parseInt(width/3 * 1.5f), PApplet.parseInt(height / 4.5f * 3), "Bed Bugs");//work out a ratio for x position, add y
+    sophie = new RoundButton("button", PApplet.parseInt(width/3 * 1.5f), PApplet.parseInt(height / 4.5f * 4), "Sophie's Song");//work out a ratio for x position, add y
 
 
 
@@ -111,7 +130,7 @@ void setup() {
   //img2 = loadImage("seedBottom.jpg");
 }
 
-void draw() {
+public void draw() {
   //background(180, 0, 100);
   if (!showCursor) noCursor(); //this shouldn't work in presentation mode, but seems to be fine!
   //HScrollbar[] sliders = {hs1, hs2, hs3}; //how to define this globally?
@@ -120,7 +139,7 @@ void draw() {
   {//Draw buttons
 
     fill(100, 0, 100, 100);
-    rect(width/6 * 4.5, height / 9 * 1, width/6 * 1, (height / 7) * 6);
+    rect(width/6 * 4.5f, height / 9 * 1, width/6 * 1, (height / 7) * 6);
     noFill();
 
     //looks like I wrote this just as I was starting to get into processing, this is clunky!
@@ -173,7 +192,7 @@ void draw() {
       sliders[i].update();
       sliders[i].display();
 
-      cBuffer[i] = int(map(int(sliders[i].getPos()), 38, 302, 0, 255));
+      cBuffer[i] = PApplet.parseInt(map(PApplet.parseInt(sliders[i].getPos()), 38, 302, 0, 255));
       //println(cBuffer[0]);
       // println("slider " + i + " " + sliders[i].getPos());
     }
@@ -203,7 +222,7 @@ void draw() {
 }
 
 
-void saveArray(){
+public void saveArray(){
   JSONArray rgb = new JSONArray();
     for(int i = 0; i < 3; i++) {
       rgb.setInt(i, cBuffer[i]);
@@ -214,7 +233,7 @@ void saveArray(){
     println("--------------saved--------------");
 }
 
-boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurpose abstraction?
+public boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurpose abstraction?
 
   boolean value = false;
   for (int i = 0; i < myTestArray.length; i++){
@@ -227,11 +246,11 @@ boolean testArray(int[] myTestArray, int[] targetArray){//can I make a multipurp
 
 }
 
-void setScene(int scene) {
+public void setScene(int scene) {
    oscP5.send(new OscMessage("/scene").add(scene), puredata);
 }
 
-void mousePressed() {
+public void mousePressed() {
   //this could be an array/for loop
   //for (int i = 0; i < 6; i++) {
   //  if (allButtons[i].updateMouse(mouseX, mouseY)) {
@@ -279,9 +298,9 @@ class RoundButton {
   int circleX, circleY;  // Position of circle button
   int rectSize = 90;     // Diameter of rect  -- not needed atm!
   int circleSize = 45;   // Diameter of circle
-  color rectColor, circleColor, baseColor;
-  color rectHighlight, circleHighlight;
-  color currentColor;
+  int rectColor, circleColor, baseColor;
+  int rectHighlight, circleHighlight;
+  int currentColor;
   boolean rectOver = false;
   boolean circleOver = false;
   int pressedColour = 0;
@@ -304,7 +323,7 @@ class RoundButton {
     ellipseMode(CENTER);
   }
 
-   void drawButton(){//int pressedColour
+   public void drawButton(){//int pressedColour
     {//Light label - make this part of a button class/method
       fill(0);
       textSize(20);
@@ -313,7 +332,7 @@ class RoundButton {
     }
 
     fill(150, 0, 150);
-    ellipse(circleX, circleY, circleSize * 1.5, circleSize * 1.5);
+    ellipse(circleX, circleY, circleSize * 1.5f, circleSize * 1.5f);
 
     //if (circleOver) {
     //  fill((buttonFlag[0] ? 255 : 0));
@@ -330,7 +349,7 @@ class RoundButton {
     if (pressedColour > 0) pressedColour -= 5;
   }
 
-  boolean updateMouse(int x, int y){//from Buttons
+  public boolean updateMouse(int x, int y){//from Buttons
   if ( overCircle(circleX, circleY, circleSize) ) {
     circleOver = true;
     return true;
@@ -344,7 +363,7 @@ class RoundButton {
     return false;
   }
 }
-  boolean overRect(int x, int y, int width, int height)  {
+  public boolean overRect(int x, int y, int width, int height)  {
   if (mouseX >= x && mouseX <= x+width &&
       mouseY >= y && mouseY <= y+height) {
     return true;
@@ -353,7 +372,7 @@ class RoundButton {
   }
   }
 
-  void click(){
+  public void click(){
     if (circleOver) {
     currentColor = circleColor;
     //buttonFlag[0] = !buttonFlag[0];
@@ -364,26 +383,26 @@ class RoundButton {
   //}
   }
 
-  boolean checkFlag(){
+  public boolean checkFlag(){
     return buttonFlag[0];
   }
 
-  boolean checkChanged(){
+  public boolean checkChanged(){
     return buttonFlag[0] != buttonFlag[1];
   }
 
-  boolean toggle(){ //I don't think I need this array for now
+  public boolean toggle(){ //I don't think I need this array for now
     buttonFlag[0] = !buttonFlag[0];
     buttonFlag[1] = buttonFlag[0];
     return buttonFlag[0]; //return buttonFlag[0] != buttonFlag[1];
   }
 
-  void setToggle(boolean input){
+  public void setToggle(boolean input){
     buttonFlag[0] = input;
   }
 
 
-boolean overCircle(int x, int y, int diameter) {
+public boolean overCircle(int x, int y, int diameter) {
   float disX = x - mouseX;
   float disY = y - mouseY;
   if (sqrt(sq(disX) + sq(disY)) < diameter/2 ) {
@@ -404,7 +423,7 @@ class HScrollbar {
   boolean over;           // is the mouse over the slider?
   boolean locked;
   float ratio;
-  color bgcolor = color(0, 0, 0);
+  int bgcolor = color(0, 0, 0);
 
   HScrollbar (float xp, float yp, int sw, int sh, int l) {
     swidth = sw;
@@ -420,13 +439,13 @@ class HScrollbar {
     loose = l;
   }
 
-  void setPos(int pos) {
+  public void setPos(int pos) {
     float mapped = map(pos, 0, 255, 38, 302); //need to set this range!!
     spos = mapped;
     newspos = mapped;
   }
 
-  void update() { //added x y from buttons
+  public void update() { //added x y from buttons
 
 
     if (overEvent()) {
@@ -450,11 +469,11 @@ class HScrollbar {
     }
   }
 
-  float constrain(float val, float minv, float maxv) {
+  public float constrain(float val, float minv, float maxv) {
     return min(max(val, minv), maxv);
   }
 
-  boolean overEvent() {
+  public boolean overEvent() {
     if (mouseX > xpos && mouseX < xpos+swidth &&
        mouseY > ypos && mouseY < ypos+sheight) {
       return true;
@@ -463,13 +482,13 @@ class HScrollbar {
     }
   }
 
-  void setColor(color c) {
+  public void setColor(int c) {
     bgcolor = c;
   }
 
 
 
-  void display() {
+  public void display() {
    stroke(0);
    strokeWeight(3);
    fill(bgcolor, 100);
@@ -479,12 +498,22 @@ class HScrollbar {
    // } else {
      fill(bgcolor, 255);
    // }
-   ellipse(spos+sheight/2, ypos+sheight/2, sheight * 1.5, sheight * 1.5);
+   ellipse(spos+sheight/2, ypos+sheight/2, sheight * 1.5f, sheight * 1.5f);
  }
 
-  float getPos() {
+  public float getPos() {
     // Convert spos to be values between
     // 0 and the total width of the scrollbar
     return spos * ratio;
+  }
+}
+  public void settings() {  size(800, 600); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "--present", "--window-color=#666666", "--hide-stop", "Workshop_GUI" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
   }
 }
