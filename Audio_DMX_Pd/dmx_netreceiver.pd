@@ -817,6 +817,7 @@
 #X obj 736 1130 + 1;
 #X obj 737 1179 expr ($f1 * 12) + 7;
 #X msg 137 867 open 0;
+#X obj 564 61 loadbang;
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
@@ -1227,3 +1228,4 @@
 #X connect 410 0 402 0;
 #X connect 410 0 405 0;
 #X connect 411 0 5 0;
+#X connect 412 0 52 0;
