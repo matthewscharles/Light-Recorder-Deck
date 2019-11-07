@@ -1,0 +1,84 @@
+#N canvas 0 23 959 693 10;
+#N canvas 794 23 450 300 displayIn 0;
+#X msg 25 240 5;
+#X msg 25 261 \; sun color \$1;
+#X msg 56 239 8;
+#X obj 22 56 r sunbutton;
+#X msg 22 107 1;
+#X obj 25 219 sel 1 0, f 11;
+#X msg 127 238 5;
+#X msg 158 237 8;
+#X msg 124 105 1;
+#X obj 127 217 sel 1 0, f 11;
+#X msg 155 106 0;
+#X msg 54 105 0;
+#X obj 22 76 t b b b;
+#X obj 124 74 t b b b;
+#X msg 244 240 5;
+#X msg 275 239 8;
+#X msg 241 107 1;
+#X obj 244 219 sel 1 0, f 11;
+#X msg 272 106 0;
+#X obj 241 76 t b b b;
+#X obj 241 56 r offbutton;
+#X msg 88 106 0;
+#X obj 124 54 r standbybutton;
+#X msg 127 259 \; standby color \$1;
+#X msg 244 261 \; off color \$1;
+#X msg 307 108 0;
+#X msg 186 106 0;
+#X obj 362 57 r testbutton;
+#X obj 362 79 s testall;
+#X connect 0 0 1 0;
+#X connect 2 0 1 0;
+#X connect 3 0 12 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 5 1 2 0;
+#X connect 6 0 23 0;
+#X connect 7 0 23 0;
+#X connect 8 0 9 0;
+#X connect 9 0 6 0;
+#X connect 9 1 7 0;
+#X connect 10 0 5 0;
+#X connect 11 0 9 0;
+#X connect 12 0 4 0;
+#X connect 12 1 11 0;
+#X connect 12 2 21 0;
+#X connect 13 0 8 0;
+#X connect 13 1 10 0;
+#X connect 13 2 26 0;
+#X connect 14 0 24 0;
+#X connect 15 0 24 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 17 1 15 0;
+#X connect 18 0 5 0;
+#X connect 19 0 16 0;
+#X connect 19 1 18 0;
+#X connect 19 2 25 0;
+#X connect 20 0 19 0;
+#X connect 21 0 17 0;
+#X connect 22 0 13 0;
+#X connect 25 0 9 0;
+#X connect 26 0 17 0;
+#X connect 27 0 28 0;
+#X restore 110 589 pd displayIn;
+#X obj 32 6 cnv 15 500 400 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X obj 45 22 cnv 15 150 180 empty sun empty 20 12 0 14 -262131 -66577
+0;
+#X obj 67 42 bng 100 250 50 0 sunbutton empty Sun 8 130 1 50 -261234
+-260097 -1;
+#X obj 207 21 cnv 15 150 180 empty test empty 20 12 0 14 -228992 -66577
+0;
+#X obj 232 43 bng 100 250 50 0 standbybutton empty Standby -4 130 1
+30 -4032 -260097 -1;
+#X obj 369 21 cnv 15 150 180 empty off empty 20 12 0 14 -228992 -66577
+0;
+#X obj 395 42 bng 100 250 50 0 offbutton empty OFF -1 130 1 50 -4160
+-4032 -1;
+#X obj 45 210 cnv 15 474 180 empty empty empty 20 12 0 14 -191407 -66577
+0;
+#X obj 231 220 bng 100 250 50 0 testbutton empty Test 0 130 1 50 -258113
+-260097 -1;
