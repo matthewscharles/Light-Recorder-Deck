@@ -1,4 +1,4 @@
-#N canvas 184 116 829 497 10;
+#N canvas 428 181 829 497 10;
 #N canvas 96 92 896 611 hex 0;
 #X obj 133 548 outlet;
 #X obj 42 13 inlet;
@@ -86,7 +86,7 @@ int($f1 / 16) + 55) \; if ($f1 % 16 <= 9 \, int($f1 % 16) + 48 \, int($f1
 #X obj 149 -57 metro 20;
 #X obj 258 -54 metro 15;
 #X obj 17 81 pack f f f f;
-#X floatatom 12 40 5 0 0 0 - - -;
+#X floatatom 11 52 5 0 0 0 - - -;
 #X obj 6 5 counter 2 0 15;
 #X obj 33 -61 metro 20;
 #X obj 3 -52 255;
@@ -96,6 +96,7 @@ int($f1 / 16) + 55) \; if ($f1 % 16 <= 9 \, int($f1 % 16) + 48 \, int($f1
 #X obj 412 170 line 0 10;
 #X obj 480 171 line 0 10;
 #X obj 547 171 line 0 10;
+#X obj 20 28 1;
 #X connect 0 0 2 0;
 #X connect 0 0 17 0;
 #X connect 1 0 5 0;
@@ -130,7 +131,8 @@ int($f1 / 16) + 55) \; if ($f1 % 16 <= 9 \, int($f1 % 16) + 48 \, int($f1
 #X connect 30 0 32 0;
 #X connect 30 0 33 0;
 #X connect 30 0 34 0;
-#X connect 30 0 28 0;
+#X connect 30 0 38 0;
 #X connect 32 0 14 0;
 #X connect 33 0 15 0;
 #X connect 34 0 16 0;
+#X connect 38 0 28 0;
