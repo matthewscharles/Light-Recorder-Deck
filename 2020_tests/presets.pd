@@ -1,0 +1,79 @@
+#N canvas 0 25 267 785 12;
+#X obj 25 25 bng 200 250 50 0 preset1 preset1r 1 75 100 0 100 -262144
+-1 -1;
+#X obj 200 100 cnv 15 50 50 empty wheel0 empty 20 12 0 14 -199681 -262144
+0;
+#X obj 186 150 cnv 15 50 50 empty wheel1 empty 20 12 0 14 -201217 -262144
+0;
+#X obj 150 186 cnv 15 50 50 empty wheel2 empty 20 12 0 14 -196609 -262144
+0;
+#X obj 100 200 cnv 15 50 50 empty wheel3 empty 20 12 0 14 -196645 -262144
+0;
+#X obj 50 186 cnv 15 50 50 empty wheel4 empty 20 12 0 14 -196731 -262144
+0;
+#X obj 13 150 cnv 15 50 50 empty wheel5 empty 20 12 0 14 -180 -262144
+0;
+#X obj 0 100 cnv 15 50 50 empty wheel6 empty 20 12 0 14 -65716 -262144
+0;
+#X obj 13 50 cnv 15 50 50 empty wheel7 empty 20 12 0 14 -1716 -262144
+0;
+#X obj 49 13 cnv 15 50 50 empty wheel8 empty 20 12 0 14 -32180 -262144
+0;
+#X obj 99 0 cnv 15 50 50 empty wheel9 empty 20 12 0 14 -45902 -262144
+0;
+#X obj 150 13 cnv 15 50 50 empty wheel10 empty 20 12 0 14 -242433 -262144
+0;
+#X obj 186 49 cnv 15 50 50 empty wheel11 empty 20 12 0 14 -236289 -262144
+0;
+#X obj 25 275 bng 200 250 50 0 preset2 preset2r 2 75 100 0 100 -262144
+-1 -1;
+#X obj 200 350 cnv 15 50 50 empty wheel0 empty 20 12 0 14 -196864 -262144
+0;
+#X obj 186 400 cnv 15 50 50 empty wheel1 empty 20 12 0 14 -32768 -262144
+0;
+#X obj 150 436 cnv 15 50 50 empty wheel2 empty 20 12 0 14 -256 -262144
+0;
+#X obj 100 450 cnv 15 50 50 empty wheel3 empty 20 12 0 14 -65536 -262144
+0;
+#X obj 50 436 cnv 15 50 50 empty wheel4 empty 20 12 0 14 -65281 -262144
+0;
+#X obj 13 400 cnv 15 50 50 empty wheel5 empty 20 12 0 14 -261889 -262144
+0;
+#X obj 0 350 cnv 15 50 50 empty wheel6 empty 20 12 0 14 -261889 -262144
+0;
+#X obj 13 300 cnv 15 50 50 empty wheel7 empty 20 12 0 14 -245505 -262144
+0;
+#X obj 49 263 cnv 15 50 50 empty wheel8 empty 20 12 0 14 -229121 -262144
+0;
+#X obj 99 250 cnv 15 50 50 empty wheel9 empty 20 12 0 14 -212737 -262144
+0;
+#X obj 150 263 cnv 15 50 50 empty wheel10 empty 20 12 0 14 -196609
+-262144 0;
+#X obj 186 299 cnv 15 50 50 empty wheel11 empty 20 12 0 14 -196736
+-262144 0;
+#X obj 25 525 bng 200 250 50 0 preset3 preset3r 3 75 100 0 100 -262144
+-1 -1;
+#X obj 200 600 cnv 15 50 50 empty wheel0 empty 20 12 0 14 -235828 -262144
+0;
+#X obj 186 650 cnv 15 50 50 empty wheel1 empty 20 12 0 14 -246170 -262144
+0;
+#X obj 150 686 cnv 15 50 50 empty wheel2 empty 20 12 0 14 -88568 -262144
+0;
+#X obj 100 700 cnv 15 50 50 empty wheel3 empty 20 12 0 14 -63943 -262144
+0;
+#X obj 50 686 cnv 15 50 50 empty wheel4 empty 20 12 0 14 -65536 -262144
+0;
+#X obj 13 650 cnv 15 50 50 empty wheel5 empty 20 12 0 14 -261889 -262144
+0;
+#X obj 0 600 cnv 15 50 50 empty wheel6 empty 20 12 0 14 -45729 -262144
+0;
+#X obj 13 550 cnv 15 50 50 empty wheel7 empty 20 12 0 14 -196609 -262144
+0;
+#X obj 49 513 cnv 15 50 50 empty wheel8 empty 20 12 0 14 -225940 -262144
+0;
+#X obj 99 500 cnv 15 50 50 empty wheel9 empty 20 12 0 14 -91904 -262144
+0;
+#X obj 150 513 cnv 15 50 50 empty wheel10 empty 20 12 0 14 -248884
+-262144 0;
+#X obj 186 549 cnv 15 50 50 empty wheel11 empty 20 12 0 14 -164572
+-262144 0;

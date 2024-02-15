@@ -1,0 +1,45 @@
+#N struct 1027-color float x float y float farbe float ynpos;
+#N canvas 235 212 868 610 12;
+#X obj 59 64 cnv 15 50 50 empty wheel0 empty 20 12 0 14 -258081 -262144
+0;
+#X obj 391 55 cnv 15 100 60 empty empty empty 20 12 0 14 -259968 -66577
+0;
+#X obj 602 166 jmmmp/pd-colors;
+#X obj 459 371 jmmmp/rgb-color;
+#X obj 708 541 print;
+#X obj 459 322 pack f f f;
+#X floatatom 459 290 5 0 0 0 - - -;
+#X floatatom 514 290 5 0 0 0 - - -;
+#X floatatom 566 290 5 0 0 0 - - -;
+#X obj 459 492 send;
+#X floatatom 528 470 5 0 0 0 - - -;
+#X obj 532 531 print;
+#X msg 532 507 symbol wheel\$1;
+#X obj 110 87 cnv 15 50 50 empty wheel1 empty 20 12 0 14 -180611 -262144
+0;
+#X obj 161 110 cnv 15 50 50 empty wheel2 empty 20 12 0 14 -180611 -262144
+0;
+#X obj 389 158 text get rgbVals;
+#X floatatom 389 131 5 0 0 0 - - -;
+#X obj 389 234 * 255;
+#X obj 389 208 unpack f f f, f 28;
+#X obj 484 235 * 255;
+#X obj 582 236 * 255;
+#X obj 310 207 print rgb;
+#X connect 3 0 9 0;
+#X connect 5 0 3 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 1;
+#X connect 8 0 5 2;
+#X connect 10 0 12 0;
+#X connect 12 0 11 0;
+#X connect 12 0 9 1;
+#X connect 15 0 18 0;
+#X connect 15 0 21 0;
+#X connect 16 0 15 0;
+#X connect 17 0 6 0;
+#X connect 18 0 17 0;
+#X connect 18 1 19 0;
+#X connect 18 2 20 0;
+#X connect 19 0 7 0;
+#X connect 20 0 8 0;
